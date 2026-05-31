@@ -8,5 +8,6 @@ data class PushEvent(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     val repository: String,
-    val receivedAt: String
+    val receivedAt: String,
+    val compareUrl: String = ""
 )

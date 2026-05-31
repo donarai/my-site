@@ -23,9 +23,11 @@ class WebhookController(private val repository: PushEventRepository) {
 
         val json = org.springframework.boot.json.BasicJsonParser().parseMap(payload)
         val repoName = (json["repository"] as? Map<*, *>)?.get("name") as? String ?: "unknown"
+        val compareUrl = json["compare"] as? String ?: ""
         val event = PushEvent(
             repository = repoName,
-            receivedAt = LocalDateTime.now().toString()
+            receivedAt = LocalDateTime.now().toString(),
+            compareUrl = compareUrl
         )
         repository.save(event)
         println("Webhook received: $event")

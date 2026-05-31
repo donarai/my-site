@@ -1,6 +1,7 @@
 type PushEvent = {
 	repository: string;
 	receivedAt: string;
+	compareUrl: string;
 };
 
 export default async function ActivityPage() {
@@ -36,7 +37,18 @@ export default async function ActivityPage() {
 							)}
 						</p>
 						<p className="mt-1 font-medium transition-colors group-hover:text-zinc-900">
-							{event.repository} に push
+							{event.compareUrl ? (
+								<a
+									href={event.compareUrl}
+									target="_blank"
+									rel="noopener noreferrer"
+									className="hover:underline"
+								>
+									{event.repository} に push
+								</a>
+							) : (
+								<>{event.repository} に push</>
+							)}
 						</p>
 					</li>
 				))}
