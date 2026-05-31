@@ -30,16 +30,27 @@ export default function RootLayout({
 		>
 			<body>
 				<nav className="border-b px-6 py-4">
-					<div className="max-w-2xl mx-auto flex gap-6">
+					<div className="max-w-2xl mx-auto flex items-center justify-between">
 						<Link
 							href="/"
-							className="font-semibold hover:text-zinc-500"
+							className="font-bold text-lg tracking-tight"
 						>
-							Home
+							Arai Don のサイト
 						</Link>
-						<Link href="/activity" className="hover:text-zinc-500">
-							Activity
-						</Link>
+						<div className="flex gap-6">
+							<Link
+								href="/"
+								className="text-sm hover:text-zinc-500 transition-colors"
+							>
+								Home
+							</Link>
+							<Link
+								href="/activity"
+								className="text-sm hover:text-zinc-500 transition-colors"
+							>
+								Activity
+							</Link>
+						</div>
 					</div>
 				</nav>
 				{children}
