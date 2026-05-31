@@ -7,13 +7,10 @@ import java.time.LocalDateTime
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-data class PushEvent(val repository: String, val receivedAt: String)
-
 @RestController
-class WebhookController {
+class WebhookController(private val repository: PushEventRepository) {
 
     private val secret = System.getenv("WEBHOOK_SECRET") ?: "my-webhook-secret"
-    private val events = mutableListOf<PushEvent>()
 
     @PostMapping("/webhook")
     fun receive(
@@ -30,13 +27,13 @@ class WebhookController {
             repository = repoName,
             receivedAt = LocalDateTime.now().toString()
         )
-        events.add(0, event)
+        repository.save(event)
         println("Webhook received: $event")
         return "ok"
     }
 
     @GetMapping("/activity")
-    fun getActivity(): List<PushEvent> = events
+    fun getActivity(): List<PushEvent> = repository.findAll().sortedByDescending { it.receivedAt }
 
     private fun isValidSignature(signature: String, payload: String): Boolean {
         val mac = Mac.getInstance("HmacSHA256")
