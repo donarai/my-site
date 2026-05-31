@@ -16,7 +16,13 @@ export default function Home() {
 					<li>
 						<p className="font-semibold">大阪大学</p>
 						<p className="text-sm text-zinc-500 mt-1">
-							2020.04 - 2025.03 &nbsp;&nbsp;基礎工学部
+							2024.04 - 2026.03 &nbsp;&nbsp;基礎工学研究科
+						</p>
+					</li>
+					<li>
+						<p className="font-semibold">大阪大学</p>
+						<p className="text-sm text-zinc-500 mt-1">
+							2020.04 - 2024.03 &nbsp;&nbsp;基礎工学部
 						</p>
 					</li>
 				</ul>
