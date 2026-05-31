@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
     push:
@@ -6,16 +6,24 @@ on:
             - main
 
 jobs:
-    build-backend:
+    deploy-backend:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v5
-            - name: Build backend Docker image
-              run: docker build -t my-site-backend ./backend
+            - uses: superfly/flyctl-actions/setup-flyctl@master
+            - name: Deploy backend
+              run: flyctl deploy --remote-only
+              working-directory: ./backend
+              env:
+                  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-    build-frontend:
+    deploy-frontend:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v5
-            - name: Build frontend Docker image
-              run: docker build -t my-site-frontend ./frontend
+            - uses: superfly/flyctl-actions/setup-flyctl@master
+            - name: Deploy frontend
+              run: flyctl deploy --remote-only
+              working-directory: ./frontend
+              env:
+                  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
