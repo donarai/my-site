@@ -25,6 +25,7 @@ export default async function ActivityPage() {
 							{new Date(event.receivedAt).toLocaleString(
 								"ja-JP",
 								{
+									timeZone: "Asia/Tokyo",
 									year: "numeric",
 									month: "long",
 									day: "numeric",
