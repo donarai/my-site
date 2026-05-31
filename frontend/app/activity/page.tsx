@@ -22,7 +22,16 @@ export default async function ActivityPage() {
 				{events.map((event, i) => (
 					<li key={i} className="border rounded-lg p-4">
 						<p className="font-mono text-sm text-zinc-500">
-							{event.receivedAt}
+							{new Date(event.receivedAt).toLocaleString(
+								"ja-JP",
+								{
+									year: "numeric",
+									month: "long",
+									day: "numeric",
+									hour: "2-digit",
+									minute: "2-digit",
+								},
+							)}
 						</p>
 						<p className="mt-1">{event.repository} に push</p>
 					</li>
