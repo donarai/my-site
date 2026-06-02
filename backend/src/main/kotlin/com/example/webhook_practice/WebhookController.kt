@@ -24,7 +24,8 @@ class WebhookController(private val repository: PushEventRepository) {
         val json = org.springframework.boot.json.BasicJsonParser().parseMap(payload)
         val repo = json["repository"] as? Map<*, *>
 
-        val isPrivate = repo?.get("private") as? Boolean ?: false
+        val isPrivate = repo?.get("private")?.toString()?.toBoolean() ?: false
+//        val isPrivate = repo?.get("private") as? Boolean ?: false
         if (isPrivate) return "ok"
 
         val repoName = repo?.get("name") as? String ?: "unknown"
