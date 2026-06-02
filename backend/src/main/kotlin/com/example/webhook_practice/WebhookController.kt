@@ -10,7 +10,7 @@ import javax.crypto.spec.SecretKeySpec
 @RestController
 class WebhookController(private val repository: PushEventRepository) {
 
-    private val secret = System.getenv("WEBHOOK_SECRET") ?: "my-webhook-secret"
+    private val secret = System.getenv("WEBHOOK_SECRET") ?: ""
 
     @PostMapping("/webhook")
     fun receive(
@@ -23,7 +23,9 @@ class WebhookController(private val repository: PushEventRepository) {
 
         val json = org.springframework.boot.json.BasicJsonParser().parseMap(payload)
         val repoName = (json["repository"] as? Map<*, *>)?.get("name") as? String ?: "unknown"
-        val compareUrl = json["compare"] as? String ?: ""
+        val compareUrl = (json["compare"] as? String)
+            ?.takeIf { it.startsWith("https://github.com/") }
+            ?: ""
         val event = PushEvent(
             repository = repoName,
             receivedAt = LocalDateTime.now().toString(),
