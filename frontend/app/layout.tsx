@@ -14,8 +14,14 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "Don Arai",
+	title: "Don Araiのサイト",
 	description: "Backend Engineer",
+	openGraph: {
+		title: "Don Arai",
+		description: "Backend Engineer",
+		url: "https://donarai.com",
+		siteName: "Don Arai",
+	},
 };
 
 export default function RootLayout({
@@ -35,7 +41,7 @@ export default function RootLayout({
 							href="/"
 							className="font-bold text-lg tracking-tight"
 						>
-							Arai Don のサイト
+							Don Arai のサイト
 						</Link>
 						<div className="flex gap-6">
 							<Link
