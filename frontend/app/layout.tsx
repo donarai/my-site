@@ -14,6 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+	metadataBase: new URL("https://donarai.com"),
 	title: "Don Araiのサイト",
 	description: "Backend Engineer",
 	openGraph: {
