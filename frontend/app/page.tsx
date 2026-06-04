@@ -53,6 +53,43 @@ export default function Home() {
 			</section>
 
 			<section className="mb-10">
+				<h2 className="text-xl font-semibold mb-6">成果</h2>
+				<ul className="space-y-4">
+					<li>
+						<a
+							href="https://journals.aps.org/prresearch/abstract/10.1103/PhysRevResearch.7.013035"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex border border-zinc-200 rounded-lg overflow-hidden hover:border-zinc-400 transition-colors"
+						>
+							<img
+								src="/paper_figure.png"
+								alt="paper figure"
+								className="w-40 h-32 object-contain bg-white flex-shrink-0 ml-2"
+							/>
+							<div className="p-4 flex flex-col justify-center">
+								<p className="font-medium text-zinc-800 leading-snug">
+									Scalable circuit depth reduction in
+									feedback-based quantum optimization with a
+									quadratic approximation
+								</p>
+								<p className="text-xs text-zinc-600 mt-1">
+									<span className="font-bold underline">
+										Don Arai
+									</span>
+									, Ken N. Okada, Yuichiro Nakano, Kosuke
+									Mitarai, Keisuke Fujii
+								</p>
+								<p className="text-xs text-zinc-500 mt-2">
+									Physical Review Research, 2025
+								</p>
+							</div>
+						</a>
+					</li>
+				</ul>
+			</section>
+
+			<section className="mb-10">
 				<h2 className="text-xl font-semibold mb-6">趣味</h2>
 				<ul className="space-y-3 text-zinc-700">
 					<li>ジム</li>
