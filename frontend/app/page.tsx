@@ -60,7 +60,7 @@ export default function Home() {
 							href="https://journals.aps.org/prresearch/abstract/10.1103/PhysRevResearch.7.013035"
 							target="_blank"
 							rel="noopener noreferrer"
-							className="flex border border-zinc-200 rounded-lg overflow-hidden hover:border-zinc-400 transition-colors"
+							className="flex items-center border border-zinc-200 rounded-lg overflow-hidden hover:border-zinc-400 transition-colors"
 						>
 							<img
 								src="/paper_figure.png"
