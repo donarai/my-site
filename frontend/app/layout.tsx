@@ -23,6 +23,9 @@ export const metadata: Metadata = {
 		url: "https://donarai.com",
 		siteName: "Don Arai",
 	},
+	twitter: {
+		card: "summary",
+	},
 };
 
 export default function RootLayout({
