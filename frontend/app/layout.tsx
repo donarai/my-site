@@ -60,6 +60,12 @@ export default function RootLayout({
 							>
 								Activity
 							</Link>
+							<Link
+								href="/contact"
+								className="text-sm hover:text-zinc-500 transition-colors"
+							>
+								Contact
+							</Link>
 						</div>
 					</div>
 				</nav>
