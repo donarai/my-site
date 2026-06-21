@@ -30,13 +30,15 @@ class ContactController {
         if (email.isEmpty() || email.length > 200 || !emailRegex.matches((email))) throw RuntimeException("メールアドレスが不正です")
         if (message.isEmpty() || message.length > 5000) throw RuntimeException("メッセージが不正です")
 
-        val content = """
-            **お問い合わせが届きました**
-            **名前** $name
-            **メール** $email
-            **メッセージ**
-            $message
-        """.trimIndent()
+        val now = java.time.ZonedDateTime.now(java.time.ZoneId.of("Asia/Tokyo"))
+            .format(java.time.format.DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm"))
+
+        val content = "📬 お問い合わせが届きました\n\n" +
+                "📅 $now\n" +
+                "👤 名前：$name\n" +
+                "📧 メール：$email\n" +
+                "💬 メッセージ：\n" +
+                message
 
         restClient.post()
             .uri(discordWebhookUrl)

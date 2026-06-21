@@ -1,25 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { sendContactEmail } from "./actions";
 
 export default function ContactPage() {
-	const [sent, setSent] = useState(false);
+	const router = useRouter();
 
 	async function handleSubmit(formData: FormData) {
 		await sendContactEmail(formData);
-		setSent(true);
-	}
-
-	if (sent) {
-		return (
-			<main className="max-w-2xl mx-auto px-6 py-16 fade-in">
-				<h1 className="text-3xl font-bold mb-2">送信完了</h1>
-				<p className="text-zinc-500">
-					お問い合わせありがとうございます。内容を確認次第、ご連絡いたします。
-				</p>
-			</main>
-		);
+		router.push("/contact/success");
 	}
 
 	return (
@@ -36,6 +25,7 @@ export default function ContactPage() {
 						type="text"
 						name="name"
 						required
+						maxLength={100}
 						className="w-full border border-zinc-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
 					/>
 				</div>
@@ -48,6 +38,7 @@ export default function ContactPage() {
 						type="email"
 						name="email"
 						required
+						maxLength={200}
 						className="w-full border border-zinc-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
 					/>
 				</div>
@@ -59,6 +50,7 @@ export default function ContactPage() {
 					<textarea
 						name="message"
 						required
+						maxLength={5000}
 						rows={6}
 						className="w-full border border-zinc-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
 					/>
