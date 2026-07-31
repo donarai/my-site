@@ -1,4 +1,7 @@
 import { Suspense } from "react";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+
+export const dynamic = "force-dynamic";
 
 type PushEvent = {
 	id: number;
@@ -8,11 +11,22 @@ type PushEvent = {
 };
 
 async function ActivityList() {
-	const res = await fetch(
-		`${process.env.BACKEND_URL ?? "http://localhost:8080"}/activity`,
-		{ cache: "no-store" },
-	);
-	const events: PushEvent[] = await res.json();
+	const { env } = await getCloudflareContext({ async: true });
+	const { results } = await env.DB.prepare(
+		"SELECT id, repository, received_at, compare_url FROM push_events ORDER BY received_at DESC LIMIT 50",
+	).all<{
+		id: number;
+		repository: string;
+		received_at: string;
+		compare_url: string;
+	}>();
+
+	const events: PushEvent[] = results.map((row) => ({
+		id: row.id,
+		repository: row.repository,
+		receivedAt: row.received_at,
+		compareUrl: row.compare_url,
+	}));
 
 	return (
 		<ul className="relative border-l border-zinc-200 space-y-8 ml-3">
