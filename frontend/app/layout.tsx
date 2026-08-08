@@ -39,39 +39,41 @@ export default function RootLayout({
 			className={`${geistSans.variable} ${geistMono.variable} antialiased`}
 		>
 			<body>
-				<nav className="border-b px-6 py-4">
-					<div className="max-w-2xl mx-auto flex items-center justify-between">
-						<Link
-							href="/"
-							className="font-bold text-lg tracking-tight"
-						>
-							Don Arai のサイト
-						</Link>
-						<div className="flex gap-6">
+				<nav className="border-b px-4 sm:px-6 py-4">
+					<div className="max-w-2xl mx-auto overflow-x-auto">
+						<div className="flex items-center gap-6 w-max sm:w-full sm:justify-between">
 							<Link
 								href="/"
-								className="text-sm hover:text-zinc-500 transition-colors"
+								className="font-bold text-lg tracking-tight whitespace-nowrap"
 							>
-								Home
+								Don Arai のサイト
 							</Link>
-							<Link
-								href="/activity"
-								className="text-sm hover:text-zinc-500 transition-colors"
-							>
-								Activity
-							</Link>
-							<Link
-								href="/hobby"
-								className="text-sm hover:text-zinc-500 transition-colors"
-							>
-								Hobby
-							</Link>
-							<Link
-								href="/contact"
-								className="text-sm hover:text-zinc-500 transition-colors"
-							>
-								Contact
-							</Link>
+							<div className="flex gap-6">
+								<Link
+									href="/"
+									className="text-sm hover:text-zinc-500 transition-colors whitespace-nowrap"
+								>
+									Home
+								</Link>
+								<Link
+									href="/activity"
+									className="text-sm hover:text-zinc-500 transition-colors whitespace-nowrap"
+								>
+									Activity
+								</Link>
+								<Link
+									href="/hobby"
+									className="text-sm hover:text-zinc-500 transition-colors whitespace-nowrap"
+								>
+									Hobby
+								</Link>
+								<Link
+									href="/contact"
+									className="text-sm hover:text-zinc-500 transition-colors whitespace-nowrap"
+								>
+									Contact
+								</Link>
+							</div>
 						</div>
 					</div>
 				</nav>
