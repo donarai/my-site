@@ -54,6 +54,7 @@ export async function POST(request: NextRequest) {
 	const payload = await request.text();
 	const signature = request.headers.get("x-hub-signature-256");
 	const deliveryId = request.headers.get("x-github-delivery");
+	const event = request.headers.get("x-github-event");
 
 	const isValid = await verifySignature(
 		env.WEBHOOK_SECRET ?? "",
@@ -62,6 +63,10 @@ export async function POST(request: NextRequest) {
 	);
 	if (!isValid) {
 		return NextResponse.json({ error: "invalid signature" }, { status: 401 });
+	}
+
+	if (event !== "push") {
+		return NextResponse.json({ ok: true });
 	}
 
 	const json: GitHubPushPayload = JSON.parse(payload);
