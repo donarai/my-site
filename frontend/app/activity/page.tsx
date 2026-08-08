@@ -10,6 +10,21 @@ type PushEvent = {
 	compareUrl: string;
 };
 
+function formatDateTime(date: Date): string {
+	const parts = new Intl.DateTimeFormat("ja-JP", {
+		timeZone: "Asia/Tokyo",
+		year: "numeric",
+		month: "2-digit",
+		day: "2-digit",
+		hour: "2-digit",
+		minute: "2-digit",
+		hour12: false,
+	}).formatToParts(date);
+	const get = (type: string) =>
+		parts.find((p) => p.type === type)?.value ?? "";
+	return `${get("year")}-${get("month")}-${get("day")} ${get("hour")}:${get("minute")}`;
+}
+
 async function ActivityList() {
 	const { env } = await getCloudflareContext({ async: true });
 	const { results } = await env.DB.prepare(
@@ -34,14 +49,7 @@ async function ActivityList() {
 				<li key={i} className="pl-6 relative group cursor-default">
 					<span className="absolute -left-1.5 top-1.5 w-3 h-3 rounded-full bg-zinc-300 border-2 border-white transition-colors group-hover:bg-zinc-500" />
 					<p className="text-sm text-zinc-500 transition-colors group-hover:text-zinc-700">
-						{new Date(event.receivedAt).toLocaleString("ja-JP", {
-							timeZone: "Asia/Tokyo",
-							year: "numeric",
-							month: "long",
-							day: "numeric",
-							hour: "2-digit",
-							minute: "2-digit",
-						})}
+						{formatDateTime(new Date(event.receivedAt))}
 					</p>
 					<p className="mt-1 font-medium transition-colors group-hover:text-zinc-900">
 						{event.compareUrl?.startsWith("https://github.com/") ? (

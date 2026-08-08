@@ -45,14 +45,7 @@ export default async function HobbyPage({
 						<span className="absolute -left-1.5 top-1.5 w-3 h-3 rounded-full bg-zinc-300 border-2 border-white transition-colors group-hover:bg-zinc-500" />
 						<div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-zinc-500 transition-colors group-hover:text-zinc-700">
 							<span className="whitespace-nowrap">
-								{new Date(event.date).toLocaleDateString(
-									"ja-JP",
-									{
-										year: "numeric",
-										month: "long",
-										day: "numeric",
-									},
-								)}
+								{event.date}
 							</span>
 							<span
 								className={`whitespace-nowrap px-2 py-0.5 rounded-full text-xs font-medium ${categoryStyle[event.category] ?? "bg-zinc-100 text-zinc-700"}`}
