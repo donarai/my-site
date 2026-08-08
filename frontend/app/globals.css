@@ -36,6 +36,12 @@
 	background-color: var(--background);
 	background-size: 32px 100%, 14px 100%;
 	background-attachment: local, scroll;
+	scrollbar-width: none; /* Firefox */
+	-ms-overflow-style: none; /* legacy Edge */
+}
+
+.scroll-shadow-x::-webkit-scrollbar {
+	display: none; /* Chrome, Safari */
 }
 
 body {
