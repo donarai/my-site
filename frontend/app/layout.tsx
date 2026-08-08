@@ -41,7 +41,7 @@ export default function RootLayout({
 			<body>
 				<nav className="border-b px-4 sm:px-6 py-4">
 					<div className="max-w-2xl mx-auto">
-						<div className="scroll-shadow-x overflow-x-auto">
+						<div className="no-scrollbar overflow-x-auto">
 							<div className="flex items-center gap-6 w-max sm:w-full sm:justify-between">
 								<Link
 									href="/"

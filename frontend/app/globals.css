@@ -27,20 +27,13 @@
 	animation: fadeIn 0.4s ease-out;
 }
 
-/* Right-edge shadow that auto-hides once scrolled to the end (no JS). */
-.scroll-shadow-x {
-	background:
-		linear-gradient(to left, var(--background) 30%, transparent) right,
-		linear-gradient(to left, rgba(0, 0, 0, 0.15), transparent) right;
-	background-repeat: no-repeat;
-	background-color: var(--background);
-	background-size: 32px 100%, 14px 100%;
-	background-attachment: local, scroll;
+/* Scrollable but no visible scrollbar; clipped text at the edge is the only affordance. */
+.no-scrollbar {
 	scrollbar-width: none; /* Firefox */
 	-ms-overflow-style: none; /* legacy Edge */
 }
 
-.scroll-shadow-x::-webkit-scrollbar {
+.no-scrollbar::-webkit-scrollbar {
 	display: none; /* Chrome, Safari */
 }
 
