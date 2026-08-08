@@ -61,6 +61,12 @@ export default function RootLayout({
 								Activity
 							</Link>
 							<Link
+								href="/hobby"
+								className="text-sm hover:text-zinc-500 transition-colors"
+							>
+								Hobby
+							</Link>
+							<Link
 								href="/contact"
 								className="text-sm hover:text-zinc-500 transition-colors"
 							>
