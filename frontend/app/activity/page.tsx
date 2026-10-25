@@ -87,7 +87,7 @@ function ActivitySkeleton() {
 
 export default function ActivityPage() {
 	return (
-		<main className="max-w-2xl mx-auto px-6 py-16 fade-in">
+		<main className="max-w-3xl mx-auto px-6 py-16 fade-in">
 			<h1 className="text-3xl font-bold mb-2">Activity</h1>
 			<p className="text-zinc-500 mb-12">
 				GitHubへのpushが自動で表示されます
