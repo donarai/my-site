@@ -69,6 +69,12 @@ export default function RootLayout({
 										Hobby
 									</Link>
 									<Link
+										href="/chat"
+										className="text-sm hover:text-zinc-500 transition-colors whitespace-nowrap"
+									>
+										Chat
+									</Link>
+									<Link
 										href="/contact"
 										className="text-sm hover:text-zinc-500 transition-colors whitespace-nowrap"
 									>
