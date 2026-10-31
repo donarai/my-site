@@ -56,6 +56,7 @@ type BanRow = { ip_key: string; until: number; reason: string };
  */
 export class ChatRoom extends DurableObject<CloudflareEnv> {
 	private activity = new Map<string, Activity>();
+	private lastSweepAt = 0;
 
 	constructor(ctx: DurableObjectState, env: CloudflareEnv) {
 		super(ctx, env);
@@ -95,6 +96,7 @@ export class ChatRoom extends DurableObject<CloudflareEnv> {
 		const ban = this.activeBan(ipKey, now);
 		if (ban) return rejectConnection(banMessage(ban.until - now));
 
+		this.forgetIdleActivity(now);
 		const activity = this.activityOf(ipKey, now);
 		if (activity.connects.length >= MAX_CONNECTS_PER_MINUTE) {
 			this.addStrike(ipKey, now);
@@ -280,6 +282,21 @@ export class ChatRoom extends DurableObject<CloudflareEnv> {
 		activity.connects = activity.connects.filter((t) => now - t < MINUTE_MS);
 		activity.strikes = activity.strikes.filter((t) => now - t < MINUTE_MS);
 		return activity;
+	}
+
+	// 1分以上動きのない IP の記録を捨てる。捨てずにおくと、休止するまでの間
+	// 訪れた IP の数だけメモリが増え続け、IP を変えながら接続されると上限に達しうる
+	private forgetIdleActivity(now: number) {
+		if (now - this.lastSweepAt < MINUTE_MS) return;
+		this.lastSweepAt = now;
+		for (const [ipKey, activity] of this.activity) {
+			const lastSeenAt = Math.max(
+				activity.lastSentAt,
+				activity.connects.at(-1) ?? 0,
+				activity.strikes.at(-1) ?? 0,
+			);
+			if (now - lastSeenAt >= MINUTE_MS) this.activity.delete(ipKey);
+		}
 	}
 
 	// 違反を1回数える。1分間に一定回数を超えたら自動で締め出す
