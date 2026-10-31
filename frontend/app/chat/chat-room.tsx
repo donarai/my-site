@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { formatDateTime } from "@/lib/date";
+import { MessageText } from "./message-text";
 import {
 	CHAT_WS_PATH,
 	MAX_NAME_LENGTH,
@@ -279,7 +280,7 @@ export default function ChatRoom() {
 							</span>
 						</p>
 						<p className="mt-0.5 text-sm text-zinc-800 break-words whitespace-pre-wrap">
-							{message.text}
+							<MessageText text={message.text} />
 						</p>
 					</li>
 				))}

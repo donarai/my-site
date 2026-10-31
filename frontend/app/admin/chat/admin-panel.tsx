@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { formatDateTime } from "@/lib/date";
+import { MessageText } from "@/app/chat/message-text";
 import {
 	ADMIN_API_PREFIX,
 	MAX_TEXT_LENGTH,
@@ -175,7 +176,7 @@ export default function AdminPanel() {
 									)}
 								</p>
 								<p className="mt-1 text-sm text-zinc-800 break-words whitespace-pre-wrap">
-									{message.text}
+									<MessageText text={message.text} />
 								</p>
 								<div className="mt-2 flex gap-2">
 									<button

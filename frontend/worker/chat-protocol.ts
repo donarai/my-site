@@ -61,6 +61,28 @@ function hasHugeCluster(value: string): boolean {
 	return false;
 }
 
+// 上限ができる前に投稿された巨大な1文字は、保存済みの発言に残っている。
+// CSS では1文字の途中で折り返せないので、表示するときは一定の長さごとに区切り、
+// 区切りの間に <wbr> を置いて折り返せるようにする
+export function splitHugeClusters(text: string): string[] {
+	const parts: string[] = [];
+	let current = "";
+	for (const { segment } of graphemes.segment(text)) {
+		const chars = [...segment];
+		if (chars.length <= MAX_CLUSTER_LENGTH) {
+			current += segment;
+			continue;
+		}
+		for (let i = 0; i < chars.length; i += MAX_CLUSTER_LENGTH) {
+			current += chars.slice(i, i + MAX_CLUSTER_LENGTH).join("");
+			parts.push(current);
+			current = "";
+		}
+	}
+	if (current) parts.push(current);
+	return parts;
+}
+
 function clean(value: string, invisible: RegExp): string {
 	return value
 		// 改行やタブは先に空白へ置き換え、前後の文字がくっつかないようにする
