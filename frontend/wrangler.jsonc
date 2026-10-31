@@ -15,6 +15,12 @@
 	// 別の入口があると、donarai.com に設定した WAF のルールを回り道されてしまう
 	"workers_dev": false,
 	"preview_urls": false,
+	// リクエストごとの記録（Workers Logs）を残し、エラーの原因をダッシュボードで調べられるようにする。
+	// 記録には訪問者の IP なども含まれ、Cloudflare 上で最大7日間保存される
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1
+	},
 	"assets": {
 		"directory": ".open-next/assets",
 		"binding": "ASSETS"
