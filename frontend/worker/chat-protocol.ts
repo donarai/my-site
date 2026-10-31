@@ -39,13 +39,27 @@ export type AdminResult = { ok: true } | { ok: false; error: string };
 // 画面に表示されない文字。ゼロ幅スペース、文字の向きを変える制御文字、
 // 私用領域の文字、見た目が空白になるハングルの埋め字や点字の空白などを含む
 const INVISIBLE =
-	/[\p{Cc}\p{Cf}\p{Co}\p{Zl}\p{Zp}ᅟᅠㅤﾠ⠀]/gu;
-// 本文では、絵文字の組み合わせに使うゼロ幅接合子 U+200D だけは残す
-const INVISIBLE_EXCEPT_ZWJ =
-	/(?!‍)[\p{Cc}\p{Cf}\p{Co}\p{Zl}\p{Zp}ᅟᅠㅤﾠ⠀]/gu;
+	/[\p{Cc}\p{Cf}\p{Co}\p{Zl}\p{Zp}\u115F\u1160\u3164\uFFA0\u2800]/gu;
+// 本文では、絵文字どうしをつなぐゼロ幅接合子 U+200D だけは残す。
+// それ以外の位置にあるものは、結合文字の間に挟んで重ね数の制限をすり抜けるのに使われる
+const INVISIBLE_EXCEPT_EMOJI_ZWJ =
+	/(?!\u200D)[\p{Cc}\p{Cf}\p{Co}\p{Zl}\p{Zp}\u115F\u1160\u3164\uFFA0\u2800]|(?<![\p{Extended_Pictographic}\uFE0F\u{1F3FB}-\u{1F3FF}])\u200D|\u200D(?!\p{Extended_Pictographic})/gu;
 // 結合文字を何重にも重ねて表示を崩す荒らし対策。3つ目以降を捨てる
 const STACKED_MARKS = /(\p{M}{2})\p{M}+/gu;
 const SPACES = /\s+/gu;
+
+// 画面上で1文字として扱われるまとまり（書記素クラスタ）の長さの上限。
+// 肌の色の指定や結合文字をつなげ続けると、折り返せない巨大な1文字になって枠からはみ出す。
+// 肌の色付きの2人組の絵文字のような長いものでも 10 なので、少し余裕を持たせる
+const MAX_CLUSTER_LENGTH = 12;
+const graphemes = new Intl.Segmenter(undefined, { granularity: "grapheme" });
+
+function hasHugeCluster(value: string): boolean {
+	for (const { segment } of graphemes.segment(value)) {
+		if ([...segment].length > MAX_CLUSTER_LENGTH) return true;
+	}
+	return false;
+}
 
 function clean(value: string, invisible: RegExp): string {
 	return value
@@ -62,15 +76,27 @@ export function normalizeName(value: unknown): string | null {
 	// NFKC で全角英数字を半角にするなど、見た目が同じ文字を1つの形にそろえる
 	const name = clean(value.normalize("NFKC"), INVISIBLE);
 	if (name.length === 0 || name.length > MAX_NAME_LENGTH) return null;
+	if (hasHugeCluster(name)) return null;
 	return name;
 }
 
 export function normalizeText(value: unknown): string | null {
 	if (typeof value !== "string") return null;
 	// 本文は全角英数字をそのまま残したいので、NFC で合成文字だけをそろえる
-	const text = clean(value.normalize("NFC"), INVISIBLE_EXCEPT_ZWJ);
+	const text = clean(value.normalize("NFC"), INVISIBLE_EXCEPT_EMOJI_ZWJ);
 	if (text.length === 0 || text.length > MAX_TEXT_LENGTH) return null;
+	if (hasHugeCluster(text)) return null;
 	return text;
+}
+
+// 名前に使える文字。英数字（アクセント付きのラテン文字を含む）、ひらがな、カタカナ、漢字と、
+// どの言語でも使う記号や絵文字に限る。キリル文字やチェロキー文字のように
+// アルファベットとそっくりな字を持つ文字体系で、本人になりすますのを防ぐ
+const NAME_CHARS =
+	/^(?:[ 0-9A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\p{scx=Hira}\p{scx=Kana}\p{scx=Hani}\p{M}]|(?=\p{scx=Zyyy})[\p{P}\p{S}])+$/u;
+
+export function hasUnsupportedNameChars(name: string): boolean {
+	return !NAME_CHARS.test(name);
 }
 
 // ラテン文字とそっくりなキリル文字やギリシャ文字などを、比べるときだけラテン文字に寄せる。
@@ -78,14 +104,17 @@ export function normalizeText(value: unknown): string | null {
 const LOOKALIKES: Record<string, string> = {
 	а: "a", е: "e", о: "o", р: "p", с: "c", у: "y", х: "x", і: "i", ј: "j",
 	ԁ: "d", ո: "n", ɑ: "a", α: "a", ο: "o", ν: "v", ι: "i", ı: "i", "0": "o",
+	ð: "d", ø: "o", "¡": "i", "|": "i",
 };
 
-// 記号や空白を除いて小文字にした、比較用の形
+// アクセントや記号、空白を除いて小文字にした、比較用の形
 function nameSkeleton(name: string): string {
-	return [...name.normalize("NFKC").toLowerCase()]
+	// NFKD でアクセント付きの文字を「文字＋結合文字」に分け、結合文字のほうを捨てる
+	return [...name.normalize("NFKD").toLowerCase()]
 		.map((char) => LOOKALIKES[char] ?? char)
 		.join("")
-		.replace(/[\p{P}\p{S}\p{Z}\p{C}]/gu, "");
+		// 濁点と半濁点は「じゅん」と「しゅん」を区別するのに要るので残す
+		.replace(/(?![\u3099\u309A])[\p{M}\p{P}\p{S}\p{Z}\p{C}]/gu, "");
 }
 
 // 名前のどこかに含まれていたら使えないもの

@@ -7,6 +7,7 @@ import {
 	MAX_NAME_LENGTH,
 	MAX_TEXT_LENGTH,
 	MIN_SEND_INTERVAL_MS,
+	hasUnsupportedNameChars,
 	isReservedName,
 	normalizeName,
 	type ChatMessage,
@@ -159,6 +160,10 @@ export default function ChatRoom() {
 			setNameError("使えない文字だけの名前か、長すぎる名前です");
 			return;
 		}
+		if (hasUnsupportedNameChars(value)) {
+			setNameError("名前には英数字、ひらがな、カタカナ、漢字、記号が使えます");
+			return;
+		}
 		if (isReservedName(value)) {
 			setNameError("その名前は使えません");
 			return;
@@ -251,7 +256,7 @@ export default function ChatRoom() {
 
 			<ul
 				ref={listRef}
-				className="h-96 overflow-y-auto border border-zinc-200 rounded-lg p-4 space-y-4"
+				className="h-96 overflow-x-hidden overflow-y-auto border border-zinc-200 rounded-lg p-4 space-y-4"
 			>
 				{messages.length === 0 && (
 					<li className="text-sm text-zinc-400">

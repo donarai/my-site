@@ -2,6 +2,7 @@ import { DurableObject } from "cloudflare:workers";
 import {
 	MIN_SEND_INTERVAL_MS,
 	OWNER_NAME,
+	hasUnsupportedNameChars,
 	isReservedName,
 	normalizeName,
 	normalizeText,
@@ -103,6 +104,7 @@ export class ChatRoom extends DurableObject<CloudflareEnv> {
 
 		const name = normalizeName(new URL(request.url).searchParams.get("name"));
 		if (!name) return rejectConnection("名前が不正です");
+		if (hasUnsupportedNameChars(name)) return rejectConnection("名前に使えない文字が含まれています");
 		if (isReservedName(name)) return rejectConnection("その名前は使えません");
 
 		// タグに IP を付けておくと、getWebSockets(ipKey) で同じ人の接続だけを取り出せる
